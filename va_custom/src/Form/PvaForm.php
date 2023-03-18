@@ -191,7 +191,7 @@ class PvaForm extends FormBase {
       }
 
       // Get the type, All, Personal or Organizational.
-      $field_type_Value = $getTranslation->get('va_type_field')->value;
+      $field_type_Value = $getTranslation->get('pva_type_field')->value;
       if ($field_type_Value == 'all' || ($field_type_Value == $evaluation_type)) {
         $title = ucfirst($getTranslation->getTitle());
         $titleUnderScore = trim(str_replace(' ', '_', $title));
