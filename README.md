@@ -25,5 +25,7 @@ This value assessment project makes Drupal a value evaluator, making it possible
 - Drupal Plugin Block and formBuilder getForm inside the Block
 - Drupal permissions and roles
 
+## Installation
+
 - db user/pass: admin/admin
-- install the password_field module, it's not in my composer, because I had to change its .info to the Drupal 10 version.
+- install the password_field module, it's not in my composer, because I had to change its .info to the Drupal 10 version
