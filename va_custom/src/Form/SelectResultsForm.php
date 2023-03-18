@@ -45,7 +45,7 @@ class SelectResultsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('current_user'),
       $container->get('database'),
@@ -55,7 +55,7 @@ class SelectResultsForm extends FormBase {
   /**
    *
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'select_results_form';
   }
 
@@ -139,7 +139,7 @@ class SelectResultsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getTestResult($current_user_id): array {
+  public function getTestResult(int $current_user_id): array {
     // Retrieve data from the database using Drupal's database API.
     $query = $this->database->select('va_evaluation', 'cpe');
     $query->fields('cpe');

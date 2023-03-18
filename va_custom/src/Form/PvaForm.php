@@ -337,7 +337,7 @@ class PvaForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getAllSelectedValues($form_state): array {
+  public function getAllSelectedValues(object $form_state): array {
     $values = $form_state->getValues();
     $x = 0;
     // Loop through the form values and do something with each one.
@@ -403,7 +403,7 @@ class PvaForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFieldDetails($type, $language): mixed {
+  protected function getFieldDetails(string $type, string $language): mixed {
     $path = $this->aliasManager->getPathByAlias('/home');
     if (empty($path)) {
       return FALSE;
@@ -418,7 +418,7 @@ class PvaForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFieldTypeEvaluation($type, $node, $language): array {
+  protected function getFieldTypeEvaluation(string $type, Node $node, string $language): array {
     $link_field = $this->getTranslationField($node, $language)
       ->get('field_' . $type)->getValue();
     $link_title = $link_field[0]['title'];
