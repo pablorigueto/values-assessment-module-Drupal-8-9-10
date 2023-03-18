@@ -1,0 +1,6 @@
+name: Value Assessment
+type: module
+description: Provides a survey functionality for Drupal.
+package: Custom
+core_version_requirement: ^8 || ^9 || ^10
+version: '10.0.0'

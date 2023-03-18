@@ -1,0 +1,328 @@
+<?php
+
+/**
+ * @file
+ * Contains va.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function va_custom_page_attachments(array &$attachments) {
+  if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
+    $attachments['#attached']['library'][] = 'va_custom/va-styling';
+  }
+}
+
+/**
+ * Create a new Node type and default fields to values.
+ */
+function va_custom_update_10001() {
+
+  $entity_type = 'node';
+  $bundle = 'pva';
+
+  // Check if a node of type 'cars' already exists.
+  $query = \Drupal::entityQuery($entity_type)
+    ->condition('type', $bundle)
+    ->accessCheck(FALSE);
+
+  if (empty($query->execute())) {
+    // Create the content type.
+    $content_type = NodeType::create([
+      'type' => $bundle,
+      'name' => t('Add Value'),
+      'description' => t('value'),
+    ]);
+    $content_type->save();
+  }
+
+  // Add fiels to new content type.
+  $fields = [
+    [
+      'field_name' => 'pva_type_field',
+      'label' => t('Type of value'),
+      'type' => 'list_string',
+      'required' => TRUE,
+      'translatable' => TRUE,
+      'status' => TRUE,
+      'settings' => [
+        'allowed_values' => [
+          'all' => t('All'),
+          'personal' => t('Personal'),
+          'organizational' => t('Organizational'),
+        ],
+      ],
+    ],
+    [
+      'field_name' => 'pva_consciousness',
+      'label' => t('Level of consciousness'),
+      'type' => 'list_string',
+      'required' => TRUE,
+      'translatable' => TRUE,
+      'status' => TRUE,
+      'settings' => [
+        'allowed_values' => [
+          1 => 1,
+          2 => 2,
+          3 => 3,
+          4 => 4,
+          5 => 5,
+          6 => 6,
+          7 => 7,
+        ],
+      ],
+    ],
+    [
+      'field_name' => 'pva_limiting_factor',
+      'label' => t('Limiting factor?'),
+      'type' => 'boolean',
+      '#default_value' => FALSE,
+      'translatable' => TRUE,
+      'status' => TRUE,
+    ],
+  ];
+
+  foreach ($fields as $field) {
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field['field_name'],
+      'entity_type' => $entity_type,
+      'type' => $field['type'],
+      'required' => $field['required'],
+      'status' => $field['status'],
+      'settings' => $field['settings'] ?? [],
+      'cardinality' => $field['cardinality'] ?? 1,
+      'translatable' => $field['translatable'] ?? TRUE,
+    ]);
+    $field_storage->save();
+
+    // Create the field config.
+    $field_config = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $bundle,
+      'label' => $field['label'],
+      'type' => $field['type'],
+      'required' => $field['required'],
+      'status' => $field['status'],
+      'settings' => $field['settings'] ?? [],
+      'cardinality' => $field['cardinality'] ?? 1,
+      'translatable' => $field['translatable'] ?? TRUE,
+    ]);
+    $field_config->save();
+  }
+}
+
+/**
+ * Create a content type to link Personal and Organizational on homepage.
+ */
+function va_custom_update_10002() {
+
+  $entity_type = 'node';
+  $bundle = 'link_page';
+
+  // Check if a node of type 'cars' already exists.
+  $query = \Drupal::entityQuery($entity_type)
+    ->condition('type', $bundle)
+    ->accessCheck(FALSE);
+
+  if (empty($query->execute())) {
+    // Create the content type.
+    $content_type = NodeType::create([
+      'type' => $bundle,
+      'name' => t('Homepage Link'),
+      'description' => t('link content'),
+    ]);
+    $content_type->save();
+  }
+
+  // Add fiels to new content type.
+  $fields = [
+    [
+      'field_name' => 'field_personal',
+      'label' => t('Personal'),
+      'type' => 'link',
+      'required' => FALSE,
+      'translatable' => TRUE,
+      'settings' => [
+        // Set to "Internal link".
+        'link_type' => 0,
+        'default_value' => [
+          0 => [
+            'uri' => '/pva?tp=per',
+          ],
+        ],
+      ],
+    ],
+    [
+      'field_name' => 'field_organizational',
+      'label' => t('Organizational'),
+      'type' => 'link',
+      'required' => FALSE,
+      'translatable' => TRUE,
+      'settings' => [
+        // Set to "Internal link".
+        'link_type' => 0,
+        'default_value' => [
+          0 => [
+            'uri' => '/pva?tp=org',
+          ],
+        ],
+      ],
+    ],
+  ];
+
+  foreach ($fields as $field) {
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field['field_name'],
+      'entity_type' => $entity_type,
+      'type' => $field['type'],
+      'required' => $field['required'],
+      'settings' => $field['settings'] ?? [],
+      'cardinality' => $field['cardinality'] ?? 1,
+      'translatable' => $field['translatable'] ?? TRUE,
+    ]);
+    $field_storage->save();
+
+    // Create the field config.
+    $field_config = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $bundle,
+      'label' => $field['label'],
+      'type' => $field['type'],
+      'required' => $field['required'],
+      'settings' => $field['settings'] ?? [],
+      'cardinality' => $field['cardinality'] ?? 1,
+      'translatable' => $field['translatable'] ?? TRUE,
+    ]);
+    $field_config->save();
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function va_custom_update_10003() {
+  /** @var \Drupal\Core\Language\LanguageManagerInterface $languageManager */
+  $languageManager = \Drupal::service('language_manager');
+  $languages = $languageManager->getLanguages();
+  $language_codes = array_keys($languages);
+
+  foreach ($language_codes as $language_code) {
+    $title = strtoupper($language_code);
+    if ($language_code == 'en') {
+      $language_code = 'home';
+    }
+
+    $menuLink = MenuLinkContent::create([
+      'title' => $title,
+      'link' => ['uri' => 'internal:/' . $language_code],
+      'menu_name' => 'main',
+      'weight' => -10,
+      'parent' => NULL,
+      'expanded' => TRUE,
+      'enabled' => TRUE,
+    ]);
+
+    $menuLink->save();
+  }
+}
+
+/**
+ * Remove the infos of created and user on each content type.
+ */
+function va_custom_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity->getEntityTypeId() == 'node') {
+    unset($build['created']);
+    unset($build['uid']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function va_custom_preprocess_html(&$variables) {
+
+  $language_manager = \Drupal::service('language_manager');
+
+  // Get the current language.
+  $current_language = $language_manager->getCurrentLanguage();
+
+  // Get the language code and name.
+  $language_code = $current_language->getId();
+
+  // Lang code and values popup translated texts.
+  $variables['#attached']['drupalSettings']['language'] = $language_code;
+  $variables['#attached']['drupalSettings']['evalutionPopUpTitle'] = t('Congrats!');
+  $variables['#attached']['drupalSettings']['evalutionPopUpText'] = t('You have chosen 10 values, now click Finish');
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function va_custom_node_access(NodeInterface $node, $op, AccountInterface $account) {
+
+  $current_url = \Drupal::request()->getRequestUri();
+  // Block access if the user is not authenticated.
+  if (!$account->isAuthenticated()
+    && $current_url != 'user/login'
+    && $current_url != '/user/register'
+    && $current_url != '/user/password'
+  ) {
+    // Redirect the user to login.
+    $response = new RedirectResponse('/user/login');
+    $response->send();
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function va_custom_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  // Add custom validation function to validate email.
+  $form['#validate'][] = '_va_custom_validate_email';
+}
+
+/**
+ * Custom validation function to check email on user registration.
+ */
+function _va_custom_validate_email(&$form, &$form_state) {
+  $email = $form_state->getValue('mail');
+
+  // Validate email format.
+  if (!\Drupal::service('email.validator')->isValid($email)) {
+    $form_state->setErrorByName('mail', t('The email address %mail is not valid.', ['%mail' => $email]));
+  }
+
+  if (!strpos($email, "@ciandt.com") !== FALSE) {
+    $form_state->setErrorByName('mail', t('Only CI&T members can use this app. Use you @ciandt email to register.', ['%mail' => $email]));
+  }
+
+  // Check if email is already registered.
+  $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail' => $email]);
+  $account = reset($users);
+  if ($account) {
+    $form_state->setErrorByName('mail', t('The email address %mail is already registered.', ['%mail' => $email]));
+  }
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function va_custom_user_insert(UserInterface $account) {
+  // Auto active the account.
+  // Set the user status to "active".
+  $account->activate();
+  // Save the user entity.
+  $account->save();
+}

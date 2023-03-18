@@ -1,0 +1,18 @@
+va_custom.va_evaluation:
+  path: '/pva'
+  defaults:
+    _form: '\Drupal\va_custom\Form\PvaForm'
+    _title: ''
+  requirements:
+    _permission: 'access content'
+    _role: 'authenticated'
+
+va_custom.va_results:
+  path: '/result'
+  defaults:
+    _form: '\Drupal\va_custom\Form\PvaResultForm'
+    _title: ''
+  requirements:
+    _permission: 'access content'
+    _role: 'authenticated'
+
