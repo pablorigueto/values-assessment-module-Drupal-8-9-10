@@ -8,6 +8,8 @@ This value assessment project makes Drupal a value evaluator, making it possible
 
 - Implements a third library on Drupal (owl-carousel as e.g.)
 - Implements Drupal behaviors
+- EventSubscriber (redirect)
+- GeoIP location and redirect
 - Drupal core/once and drupalSettings
 - Create node type programmatically
 - Create fields programmatically
