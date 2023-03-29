@@ -1,4 +1,4 @@
-![](screenshot/cover.jpg)
+![](screenshot/cover2.jpg)
 
 # Value Assessment Project
 
