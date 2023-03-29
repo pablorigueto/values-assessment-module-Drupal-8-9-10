@@ -141,7 +141,7 @@ class PvaForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId(): string {
-    return 'va_form';
+    return 'pva_form';
   }
 
   /**
@@ -220,7 +220,7 @@ class PvaForm extends FormBase {
       '#type' => 'fieldset',
       '#prefix' => '<div class="div-selected-popup popup-invisible">',
       '#suffix' => '</div>',
-      '#title' => $this->t('Selected Popup'),
+      '#title' => $this->t('Selected'),
     ];
 
     $form['submit'] = [
@@ -285,7 +285,7 @@ class PvaForm extends FormBase {
     $this->messenger->addMessage($this->t('Thank you! Here your evaluation detailed'));
 
     // Build the redirect URL with the current language.
-    $redirect_url = Url::fromRoute('va_custom.va_results')->toString();
+    $redirect_url = Url::fromRoute('va_custom.pva_results')->toString();
 
     // Redirect the user to the new URL.
     $response = new RedirectResponse($redirect_url);
@@ -320,7 +320,7 @@ class PvaForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getTranslationField($node, $langcode): Node|bool {
+  public function getTranslationField(Node $node, string $langcode): Node|bool {
     if ($node->hasTranslation($langcode)) {
       return $node->getTranslation($langcode);
     }
@@ -337,7 +337,7 @@ class PvaForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getAllSelectedValues(object $form_state): array {
+  public function getAllSelectedValues(FormStateInterface $form_state): array {
     $values = $form_state->getValues();
     $x = 0;
     // Loop through the form values and do something with each one.

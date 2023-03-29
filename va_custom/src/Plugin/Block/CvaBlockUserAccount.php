@@ -57,7 +57,7 @@ class CvaBlockUserAccount extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
       $configuration,
       $plugin_id,
@@ -70,10 +70,10 @@ class CvaBlockUserAccount extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build(): mixed {
 
     if (!$this->currentUser->isAuthenticated()) {
-      return;
+      return NULL;
     }
 
     return [
@@ -85,7 +85,7 @@ class CvaBlockUserAccount extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }

@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Url;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  *
@@ -30,6 +31,12 @@ class SelectResultsForm extends FormBase {
    */
   protected $database;
 
+  /**
+   * The Language Manager Interface.
+   *
+   * @var Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
 
   /**
    * Constructs a PatentMarkingForm object.
@@ -37,9 +44,11 @@ class SelectResultsForm extends FormBase {
   public function __construct(
     AccountInterface $currentUser,
     Connection $database,
+    LanguageManagerInterface $languageManager,
   ) {
     $this->currentUser = $currentUser;
     $this->database = $database;
+    $this->languageManager = $languageManager;
   }
 
   /**
@@ -49,6 +58,7 @@ class SelectResultsForm extends FormBase {
     return new static(
       $container->get('current_user'),
       $container->get('database'),
+      $container->get('language_manager'),
     );
   }
 
@@ -62,7 +72,7 @@ class SelectResultsForm extends FormBase {
   /**
    *
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
 
     $current_user = $this->currentUser();
 
@@ -93,16 +103,21 @@ class SelectResultsForm extends FormBase {
       ];
     }
 
+    $redirect_to_new_test = '<a href="/">';
+    if ($this->currentLanguage() == 'pt-br') {
+      $redirect_to_new_test = '<a href="/pt-br/">';
+    }
+
     // Link to homepage through the my account page.
     $form['markup'] = [
       '#markup' => '
         <div class="user-account-links" id="user_account_links">' .
       '<ul>
-            <li>
-              <a href="/">' . $start_test . '</a>
-            </li>
-          </ul>
-        </div>',
+          <li>' .
+          $redirect_to_new_test . $start_test . '</a>
+          </li>
+        </ul>
+      </div>',
     ];
 
     return $form;
@@ -122,7 +137,7 @@ class SelectResultsForm extends FormBase {
   public function redirectToOldTest(array &$form, FormStateInterface $form_state): AjaxResponse {
 
     $test_id = $form_state->getValue('select_field');
-    $url = Url::fromRoute('va_custom.va_results', [], ['query' => ['id' => $test_id]]);
+    $url = Url::fromRoute('va_custom.pva_results', [], ['query' => ['id' => $test_id]]);
     $response = new AjaxResponse();
     $response->addCommand(new RedirectCommand($url->toString()));
     return $response;
@@ -168,6 +183,13 @@ class SelectResultsForm extends FormBase {
    *   The form state.
    */
   public function searchCode(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function currentLanguage(): string {
+    return $this->languageManager->getCurrentLanguage()->getId();
   }
 
 }

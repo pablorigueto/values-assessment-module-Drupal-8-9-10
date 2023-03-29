@@ -1,0 +1,5 @@
+services:
+  va_custom.event_subscriber:
+    class: Drupal\va_custom\EventSubscriber\RedirectSubscriber
+    tags:
+      - { name: event_subscriber }

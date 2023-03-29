@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains va.
+ * Contains VA.
  */
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -15,6 +15,8 @@ use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use GeoIp2\Database\Reader;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_page_attachments().
@@ -23,10 +25,16 @@ function va_custom_page_attachments(array &$attachments) {
   if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
     $attachments['#attached']['library'][] = 'va_custom/va-styling';
   }
+
+  // Check if the current page is the user login page.
+  $current_path = \Drupal::service('path.current')->getPath();
+  if (str_ends_with($current_path, '/user/login')) {
+  }
+
 }
 
 /**
- * Create a new Node type and default fields to values.
+ * Create a new Node type and default fields to cit values.
  */
 function va_custom_update_10001() {
 
@@ -253,6 +261,19 @@ function va_custom_entity_view_alter(array &$build, EntityInterface $entity, Ent
  */
 function va_custom_preprocess_html(&$variables) {
 
+  // // How to remove something from core extension programmatically.
+  // $config_factory = \Drupal::configFactory();
+  // // Load the "core.extension" configuration object.
+  // $extension_config = $config_factory->getEditable('core.extension');
+  // // Get the current "theme" section of the configuration.
+  // $theme_section = $extension_config->get('theme');
+  // // Remove the "module-theme-name" theme from the configuration by unsetting its array key.
+  // if (isset($theme_section['module-theme-name'])) {
+  //   unset($theme_section['module-theme-name']);
+  // }
+  // // Save the updated configuration object to the database using the "set" and "save" methods.
+  // $extension_config->set('theme', $theme_section)->save();
+
   $language_manager = \Drupal::service('language_manager');
 
   // Get the current language.
@@ -265,6 +286,41 @@ function va_custom_preprocess_html(&$variables) {
   $variables['#attached']['drupalSettings']['language'] = $language_code;
   $variables['#attached']['drupalSettings']['evalutionPopUpTitle'] = t('Congrats!');
   $variables['#attached']['drupalSettings']['evalutionPopUpText'] = t('You have chosen 10 values, now click Finish');
+  $variables['#attached']['drupalSettings']['pageOneOfFive'] = t('Page 1 of 5');
+  $variables['#attached']['drupalSettings']['pageTwoOfFive'] = t('Page 2 of 5');
+  $variables['#attached']['drupalSettings']['pageThreeOfFive'] = t('Page 3 of 5');
+  $variables['#attached']['drupalSettings']['pageFourOfFive'] = t('Page 4 of 5');
+  $variables['#attached']['drupalSettings']['pageFiveOfFive'] = t('Page 5 of 5');
+ 
+  // Auto redirect to PT-BR if Country is Brazil.
+  // Check if the user has already been redirected before.
+  if (!isset($_COOKIE['redirected']) || $_COOKIE['redirected'] !== 'true') {
+
+    $ip_address = \Drupal::request()->getClientIp();
+
+    // If the IP address is a private address, get the public IP using an external service.
+    if (filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === FALSE) {
+      $public_ip = file_get_contents('https://api.ipify.org');
+      $ip_address = $public_ip !== FALSE ? $public_ip : $ip_address;
+    }
+
+    $database_path = 'public://GeoLite2-City.mmdb';
+    $reader = new Reader($database_path);
+    $record = $reader->city($ip_address);
+
+    $country = $record->country->name;
+
+    $current_url = \Drupal::request()->getRequestUri();
+
+    if ($country == 'Brazil' && strpos($current_url, '/pt-br') === FALSE) {
+      $new_url = '/pt-br' . $current_url;
+      $response = new RedirectResponse($new_url);
+      // Set a cookie to indicate that the redirect has been done.
+      setcookie('redirected', 'true', time() + 86400, '/');
+      $response->send();
+      exit;
+    }
+  }
 }
 
 /**
@@ -291,6 +347,36 @@ function va_custom_node_access(NodeInterface $node, $op, AccountInterface $accou
 function va_custom_form_user_register_form_alter(&$form, &$form_state, $form_id) {
   // Add custom validation function to validate email.
   $form['#validate'][] = '_va_custom_validate_email';
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function va_custom_menu_local_tasks_alter(&$data, $route_name) {
+  // Remove "Create new account" and "Request new password" tabs from user login page.
+  if ($route_name == 'user.login') {
+    unset($data['tabs'][0]['user.register']);
+    unset($data['tabs'][0]['user.pass']);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function va_custom_form_alter(&$form, &$form_state, $form_id) {
+
+  // Make the "Create new account" and "Request new password" links as buttons,
+  // as login employee patterns.
+  if ($form_id == 'user_login_form') {
+    $form['#prefix'] = '<div class="before-login-form">
+      <div class="welcome-cva"><h2>Welcome to CVA!</h2></div>
+      <div class="login-acc"><p>Please log in to your account</p></div>';
+    $form['#suffix'] = '</div><div class="after-login-form">
+      <span>
+      <img src="/sites/default/files/app-image.jpg">
+      </span>';
+    $form['#suffix'] .= '</div>';
+  }
 }
 
 /**
@@ -325,4 +411,64 @@ function va_custom_user_insert(UserInterface $account) {
   $account->activate();
   // Save the user entity.
   $account->save();
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ */
+function va_custom_preprocess_menu(&$variables) {
+
+  // On main menu add country image to current langs,
+  // and add a lang code as href to redirect on links.
+  if ($variables['menu_name'] == 'main') {
+
+    foreach ($variables['items'] as &$item) {
+
+      if ($item['title'] != 'Language') {
+        continue;
+      }
+
+      if (!empty($item['below'])) {
+
+        // Change the text language to current country image.
+        $current_url = \Drupal::request()->getRequestUri();
+        $current_url = explode('/', $current_url);
+        $langcode_url = $current_url[1];
+
+        $languages = \Drupal::languageManager()->getLanguages();
+        $langcodes = array_keys($languages);
+
+        $public_path = \Drupal::service('stream_wrapper_manager')->getViaUri('public://')->getExternalUrl();
+
+        $country_img = 'en';
+        if (in_array($langcode_url, $langcodes)) {
+          $country_img = $langcode_url;
+        }
+
+        $image_url = $public_path . 'language-images/' . $country_img . '.svg';
+        $item['title'] = Markup::create('<img class="img-lang" src="' . $image_url . '"</img>');
+
+        // Add image and text on language switcher menu.
+        foreach ($item['below'] as &$link) {
+          $link_title = $link['title'];
+          if ($link_title == 'United States - English') {
+            $image_file_and_langcode = 'en';
+          }
+          elseif ($link_title == 'Brazil - Portuguese') {
+            $image_file_and_langcode = 'pt-br';
+          }
+
+          $image_url = $public_path . 'language-images/' . $image_file_and_langcode . '.svg';
+
+          $link['title'] = Markup::create('
+            <div class="lang-parent" data-langcode="' . $image_file_and_langcode . '">
+              <img class="img-lang" src="' . $image_url . '"</img>
+              <div class="text-lang">' . $link_title . '</div>
+            </div>'
+          );
+        }
+
+      }
+    }
+  }
 }

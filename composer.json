@@ -11,13 +11,18 @@
     ],
     "require": {
         "composer/installers": "^2.0",
+        "drupal/address": "^1.11",
         "drupal/admin_toolbar": "^3.3",
         "drupal/core-composer-scaffold": "^10.0",
         "drupal/core-project-message": "^10.0",
         "drupal/core-recommended": "^10.0",
+        "drupal/field_group": "^3.4",
+        "drupal/google_api_client": "^4.3",
+        "drupal/googlelogin-googlelogin": "^9.2",
         "drupal/login_emailusername": "^2.1",
         "drupal/pathauto": "^1.11",
-        "drush/drush": "^11.5"
+        "drush/drush": "^11.5",
+        "geoip2/geoip2": "^2.13"
     },
     "require-dev": {
         "drupal/core-dev": "^10.0",

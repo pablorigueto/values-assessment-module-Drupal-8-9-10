@@ -98,7 +98,7 @@ class PvaResultForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId(): string {
-    return 'va_result_form';
+    return 'pva_result_form';
   }
 
   /**
@@ -137,12 +137,21 @@ class PvaResultForm extends FormBase {
 
     $results = reset($results);
 
+    // Title to result.
+    $current_user_name = ucfirst($current_user_name);
+    if ($results->type_evaluation == 'personal') {
+      $result_text = ' your Personal Values (PV)';
+    }
+    else {
+      $result_text = ' your Cultural Values (CV)';
+    }
+
     $form['results'] = [
       '#type' => 'html_tag',
       '#tag' => 'h2',
-      '#prefix' => '<div class="div-">',
+      '#prefix' => '<div class="title-results">',
       '#suffix' => '</div>',
-      '#value' => $this->t('Name') . ' ' . $current_user_name,
+      '#value' => $current_user_name . $this->t($result_text),
     ];
 
     // Langcode evaluation test.
@@ -163,7 +172,11 @@ class PvaResultForm extends FormBase {
 
         $node = $this->getStorageNode();
         $node = $node->load($value);
+        // If the node didn't have translation, get the default language.
         $field = $this->getTranslationField($node, $langcode);
+        if ($field == FALSE) {
+          $field = $node;
+        }
         $pva_limiting_factor = $field->get('pva_limiting_factor')->getValue()[0]['value'];
         $pva_consciousness = ucfirst(
           $field->get('pva_consciousness')->getValue()[0]['value']
@@ -248,6 +261,38 @@ class PvaResultForm extends FormBase {
       }
     }
 
+    // Third column.
+    $form['parent-triangle']['values']['value'] = [
+      '#type' => 'container',
+      '#tag' => 'div',
+      '#attributes' => [
+        'class' => ['container-third-column'],
+      ],
+    ];
+
+    foreach ($valuesToLastColumn as $valueToLastColumn) {
+      $form['parent-triangle']['values']['value'][$valueToLastColumn] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t($valueToLastColumn),
+        '#attributes' => [
+          'class' => ['third-column'],
+        ],
+      ];
+    }
+    
+
+    $redirect_to_explanation = '<a href="/explanation">';
+    if ($this->currentLanguage() == 'pt-br') {
+      $redirect_to_explanation = '<a href="/pt-br/explanation">';
+    }
+
+    $form['explanation-link'] = [
+      '#markup' => $redirect_to_explanation . $this->t('What are the stages of consciousness?') .'</a>',
+      '#prefix' => '<div class="explanation-result">',
+      '#suffix' => '</div>',
+    ];
+
     return $form;
   }
 
@@ -313,10 +358,11 @@ class PvaResultForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getTranslationField($node, $langcode): Node|bool {
+  public function getTranslationField(Node $node, string $langcode): Node|bool {
     if ($node->hasTranslation($langcode)) {
       return $node->getTranslation($langcode);
     }
+
     return FALSE;
   }
 

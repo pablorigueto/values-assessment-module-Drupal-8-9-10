@@ -73,59 +73,75 @@
     });
   }
 
-  Drupal.behaviors.changeLanguage = {
+ Drupal.behaviors.changeLanguage = {
     attach: function () {
-      if (!drupalSettings.changeLanguage) {
-        // Get all links on the page
-        const links = document.querySelectorAll('.primary-nav__menu a');
-        // Add click event listener to each link
-        links.forEach(link => {
-          link.addEventListener('click', event => {
-            // Get the label link
-            const langcode = getLangCode();
-            const linkLabel = link.textContent.toLowerCase().trim();
-            if (linkLabel == 'home') {
-              // Solve the issue on homepage to change lang without /.
-              if (link.getAttribute('href') == '/pt-br') {
-                link.setAttribute('href', '/pt-br/');
+      $(document).ready(function() {
+        if (!drupalSettings.changeLanguage) {
+          // Get all links on the page
+          const links = document.querySelectorAll('.lang-parent');
+          // Add click event listener to each link
+          links.forEach(link => {
+            link.addEventListener('click', event => {
+              // Prevent default behavior of link click
+              event.preventDefault();
+              // Get the label link
+              const langcode = getLangCode();
+              const elLangCode = link.getAttribute('data-langcode');
+
+              const url = new URL(window.location.href);
+              // Get the various parts of the URL using the URL object's properties
+              const pathname = url.pathname;
+              const searchQuery = url.search;
+              const parts = pathname.split('/');
+              const lastPart = parts[parts.length - 1];
+              // Avoid the reload when the language is the same as current.
+              if (elLangCode == langcode) {
+                return;
               }
-              return;
-            }
-            // Prevent default behavior of link click
-            event.preventDefault();
 
-            const url = new URL(window.location.href);
-            // Get the various parts of the URL using the URL object's properties
-            const protocol = url.protocol; // "https:"
-            const hostname = url.hostname; // "www.example.com"
-            const pathname = url.pathname; // "/path/to/file.html"
-            const searchQuery = url.search; // "?query=string"
-            const parts = pathname.split('/');
-            const lastPart = parts[parts.length - 1];
-            // Avoid the reload when the language is the same as current.
-            if (linkLabel == langcode) {
-              return;
-            }
+              // Rebuild the url after each click.
+              // If don't have query or path, we are on homepage.
+              if (elLangCode == 'en' && searchQuery.length == 0 && lastPart.length == 0) {
+                window.location.href = '/';
+              }
+              // If has query we are on another page that we need to keep the query and etc.
+              else if (elLangCode == 'en') {
+                // Check if the langcode and pathname is different than lastpart of url. 
+                if (parts[1].trim() == langcode && parts[2] !== lastPart) {
+                  const url = '/' + parts[2] + '/' +lastPart + searchQuery;
+                  const fixedUrl = removeDoubleSlashes(url);
+                  window.location.href = fixedUrl;
 
-            // Rebuild the url after each click.
-            // If don't have query, we are on homepage.
-            if (linkLabel == 'en' && searchQuery.length == 0 && lastPart.length == 0) {
-              window.location.href = '/';
-            }
-            // If has query we are on another page that we need to keep the query and etc.
-            else if (linkLabel == 'en') {
-              window.location.href = '/' + lastPart + searchQuery;
-            }
-            // If the lang is different than en.
-            else {
-              window.location.href = '/' + linkLabel + '/' + lastPart + searchQuery;
-            }
+                  return;
+                }
+
+                const url = '/' + lastPart + searchQuery;
+                const fixedUrl = removeDoubleSlashes(url);
+                window.location.href = fixedUrl;
+              }
+              // If the lang is different than en.
+              else {
+                const url = '/' + elLangCode + '/' + pathname + searchQuery;
+                const fixedUrl = removeDoubleSlashes(url);
+                window.location.href = fixedUrl;
+              }
+            });
           });
-        });
-        drupalSettings.changeLanguage = true;
-      }
+          drupalSettings.changeLanguage = true;
+        }
+      });
     }
   };
+
+  function removeDoubleSlashes(url) {
+    // Check if URL contains double slashes
+    const doubleSlashIndex = url.indexOf("//");
+    if (doubleSlashIndex >= 0) {
+      // Remove double slashes from URL
+      url = url.slice(0, doubleSlashIndex) + url.slice(doubleSlashIndex + 1);
+    }
+    return url;
+  }
 
   Drupal.behaviors.setLimitingFactorOnValues = {
     attach: function () {
@@ -141,6 +157,95 @@
       });
     }
   };
+
+  Drupal.behaviors.redirectOnImageClickHomePage = {
+    attach: function () {
+      $(document).ready(function() {
+        if (!drupalSettings.redirectOnImageClickHomePage) {
+          $('.field-group-accordion-wrapper').click(function() {
+            var hrefValue;
+            if ($(this).hasClass('personal-group')) {
+              hrefValue = $(this).find('.field--name-field-personal a').attr('href');
+            }
+            else if ($(this).hasClass('organizational-group')) {
+              hrefValue = $(this).find('.field--name-field-organizational a').attr('href');
+            }
+            if (hrefValue) {
+              window.location.href = hrefValue;
+            }
+          });
+        }
+        drupalSettings.redirectOnImageClickHomePage = true;
+      });
+    }
+  };
+
+  Drupal.behaviors.explanationPagination = {
+    attach: function () {
+      $(document).ready(function() {
+        if (!drupalSettings.explanationPagination) {
+
+          let currentScreen = 1;
+          const numScreens = 5;
+
+          $(".field--name-field-firstp").addClass('explain-screen-1');
+          $(".field--name-field-second-part").addClass('explain-screen-2');
+          $(".field--name-field-third-part").addClass('explain-screen-3');
+          $(".field--name-field-fourth-part").addClass('explain-screen-4');
+          $(".field--name-field-fifty-part").addClass('explain-screen-5');
+ 
+          // When next button is clicked.
+          $(".field--name-field-arrow").on("click", function() {
+
+            if (currentScreen < numScreens) {
+              $(`.explain-screen-${currentScreen}`).hide();
+              $(`.explain-screen-${currentScreen+1}`).show();
+              $(".field--name-field-arrow-previous").show();
+              currentScreen++;
+              addPaginationTranslatedText(currentScreen);
+            }
+            if (currentScreen == numScreens) {
+              $(".field--name-field-arrow").hide();
+            }
+          });
+          
+          // When previous button is clicked.
+          $(".field--name-field-arrow-previous").on("click", function() {
+            if (currentScreen > 1) {
+              $(`.explain-screen-${currentScreen}`).hide();
+              $(`.explain-screen-${currentScreen-1}`).show();
+              $(".field--name-field-arrow").show();
+              currentScreen--;
+              addPaginationTranslatedText(currentScreen);
+            }
+            if (currentScreen == 1) {
+              $(".field--name-field-arrow-previous").hide();
+            }
+          });
+        }
+        drupalSettings.explanationPagination = true;
+      });
+    }
+  };
+
+  function addPaginationTranslatedText(currentScreen) {
+    let screen = '.field--name-field-pagination .field__item';
+    if (currentScreen == 1) {
+      $(screen).text(drupalSettings.pageOneOfFive);
+    }
+    else if (currentScreen == 2) {
+      $(screen).text(drupalSettings.pageTwoOfFive);
+    }
+    else if (currentScreen == 3) {
+      $(screen).text(drupalSettings.pageThreeOfFive);
+    }
+    else if (currentScreen == 4) {
+      $(screen).text( drupalSettings.pageFourOfFive);
+    }
+    else if (currentScreen == 5) {
+      $(screen).text(drupalSettings.pageFiveOfFive);
+    }
+  }
 
   Drupal.behaviors.setValuePositionOnResult = {
     attach: function () {
@@ -274,6 +379,6 @@ function evalutionPopUp(title, text) {
     text: text,
     icon: 'success',
     confirmButtonText: 'OK',
-    confirmButtonColor: '#ed1941',
+    confirmButtonColor: '#0c9fa6',
   });
 }
