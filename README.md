@@ -28,6 +28,9 @@ This value assessment project makes Drupal a value evaluator, making it possible
 - Drupal permissions and roles
 
 ## Installation
-
+- Set the olivero core theme
+- Replace the menu--primary-menu.html
+- db-import drupal10.2023-03-29-1680113608.sql.gz
+- composer install
 - db user/pass: admin/admin
 - install the password_field module, it's not in my composer, because I had to change its .info to the Drupal 10 version
