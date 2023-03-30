@@ -283,8 +283,9 @@ class PvaResultForm extends FormBase {
     
 
     $redirect_to_explanation = '<a href="/explanation">';
-    if ($this->currentLanguage() == 'pt-br') {
-      $redirect_to_explanation = '<a href="/pt-br/explanation">';
+    $current_language = $this->currentLanguage();
+    if ($current_language != 'en') {
+      $redirect_to_explanation = '<a href="/' . $current_language . '/explanation">';
     }
 
     $form['explanation-link'] = [

@@ -1,6 +1,15 @@
+:root {
+	--border-color: #8f8f8f;
+	--box-shadow-color: #8a8a8a;
+	--dark-color: #000;
+	--main-text-color: #0c9fa6;
+	--white-color: #fff;
+	--poppins: var(--poppins);
+}
+
 /* Start of my Custom codes */
 body {
-	font-family: Poppins,sans-serif;
+	font-family: var(--poppins);
 }
 
 .path-pva .pv-wrapper {
@@ -20,9 +29,9 @@ body {
 
 .path-pva .pv-wrapper .form-item:hover {
 	transform: scale(0.98);
-	box-shadow: 0.1rem 0.1rem 0.5rem #8a8a8a;
+	box-shadow: 0.1rem 0.1rem 0.5rem var(--box-shadow-color);
 	transition: all 0.5s ease;
-	color: #0c9fa6;
+	color: var(--main-text-color);
 }
 
 .path-pva #edit-intro-label {
@@ -51,15 +60,15 @@ body {
 	/* word-break: break-all; */
 	justify-content: center;
 	align-self: center;
-	color: #000;
+	color: var(--dark-color);
 	cursor: pointer;
 }
 
 .path-pva .pv-wrapper .selected {
-	box-shadow: 0.1rem 0.1rem 0.5rem #8a8a8a;
+	box-shadow: 0.1rem 0.1rem 0.5rem var(--box-shadow-color);
 	/* background-color: var(--color--primary-50); */
 	/* font-weight: 700; */
-	color: #0c9fa6;
+	color: var(--main-text-color);
 	transition: all 0.5s ease;
 	padding: 0.5rem;
 }
@@ -74,7 +83,7 @@ body {
 }
 
 .path-pva .fieldset__legend {
-	background-color: #0c9fa6;
+	background-color: var(--main-text-color);
 	padding: 0.5rem 0;
 	border-top-left-radius: unset;
 	border-top-right-radius: unset;
@@ -83,7 +92,7 @@ body {
 .path-pva .fieldset {
 	border-radius: unset;
 	border: unset;
-	box-shadow: 0.1rem 0.1rem 0.5rem #8a8a8a;
+	box-shadow: 0.1rem 0.1rem 0.5rem var(--box-shadow-color);
 }
 
 /* Selected popup */
@@ -121,7 +130,7 @@ body {
 	padding: 0.1rem 0;
 	word-wrap: break-word;
 	cursor: pointer;
-	color: #0c9fa6;
+	color: var(--main-text-color);
 }
 
 /* Init screen */
@@ -151,7 +160,7 @@ body {
 
 .path-frontpage .personal-group,
 .path-frontpage .organizational-group {
-	box-shadow: 0.1rem 0.1rem 0.5rem #8a8a8a;
+	box-shadow: 0.1rem 0.1rem 0.5rem var(--box-shadow-color);
 	padding: 1rem;
 	cursor: pointer;
 }
@@ -187,7 +196,7 @@ body {
 	height: 0;
 	border-left: 10rem solid transparent;
 	border-right: 10rem solid transparent;
-	border-top: 18rem solid #8f8f8f;
+	border-top: 18rem solid var(--border-color);
 }
 
 .container-bottom {
@@ -195,14 +204,14 @@ body {
 	height: 0;
 	border-left: 10rem solid transparent;
 	border-right: 10rem solid transparent;
-	border-bottom: 18rem solid #8f8f8f;
+	border-bottom: 18rem solid var(--border-color);
 }
 
 .container-circle {
 	width: 4.5rem;
 	height: 4.5rem;
 	border-radius: 50%;
-	background-color: #8f8f8f;
+	background-color: var(--border-color);
 	margin: 1rem auto 0.75rem auto;
 }
 
@@ -217,14 +226,14 @@ body {
 	font-size: 1.4rem;
 	line-height: 5.2rem;
 	font-weight: 600;
-	color: #fff;
+	color: var(--white-color);
 	align-items: center;
 }
 
 .triangle-title-parent .triangle-title {
 	display: grid;
 	grid-template-columns: 14.5rem auto;
-	border-bottom: 0.7rem solid #fff;
+	border-bottom: 0.7rem solid var(--white-color);
 	padding-left: 1rem;
 }
 
@@ -260,7 +269,7 @@ body {
   width: 14rem;
   padding: 1.5rem;
   background-color: #EC183F;
-  color: #fff;
+  color: var(--white-color);
   word-wrap: break-word;
   font-size: 1rem;
 	line-height: 2rem;
@@ -276,18 +285,18 @@ body {
 
 .triangle-title-parent .triangle-title:nth-child(1) {
 	width: 101%;
-	background: linear-gradient(225deg, transparent 61%, #674ea7ff 61%),linear-gradient(-225deg, #8f8f8fbd 89%, transparent 50%);
+	background: linear-gradient(225deg, transparent 61%, #674ea7ff 61%),linear-gradient(-225deg, var(--border-color) 89%, transparent 50%);
 	background-size: 100% 100%;
 }
 
 .triangle-title-parent .triangle-title:nth-child(2) {
 	width: 90%;
-	background: linear-gradient(225deg, transparent 45%, #1155ccff 44%),linear-gradient(-225deg, #8f8f8fbd 87.5%, transparent 50%);
+	background: linear-gradient(225deg, transparent 45%, #1155ccff 44%),linear-gradient(-225deg, var(--border-color) 87.5%, transparent 50%);
 }
 
 .triangle-title-parent .triangle-title:nth-child(3) {
 	width: 90%;
-	background: linear-gradient(225deg, transparent 34%, #6fa8dcff 34%),linear-gradient(-225deg, #8f8f8fbd 76.5%, transparent 50%);
+	background: linear-gradient(225deg, transparent 34%, #6fa8dcff 34%),linear-gradient(-225deg, var(--border-color) 76.5%, transparent 50%);
 	background-size: 100% 100%;	
 }
 
@@ -305,25 +314,25 @@ body {
 	left: 29.5rem;
 	width: 6rem;
 	height: 6rem;
-	border: 0.7rem solid #fff;
+	border: 0.7rem solid var(--white-color);
 	border-radius: 50%;
 }
 
 .triangle-title-parent .triangle-title:nth-child(5) {
 	width: 90%;
-	background: linear-gradient(315deg, transparent 34%, #f1c232ff 34%),linear-gradient(-315deg, #8f8f8fbd 76.5%, transparent 50%);
+	background: linear-gradient(315deg, transparent 34%, #f1c232ff 34%),linear-gradient(-315deg, var(--border-color) 76.5%, transparent 50%);
 	background-size: 100% 100%;	
 }
 
 .triangle-title-parent .triangle-title:nth-child(6) {
 	width: 90%;
-	background: linear-gradient(315deg, transparent 45%, #ff9900ff 44%),linear-gradient(-315deg, #8f8f8fbd 87.5%, transparent 50%);
+	background: linear-gradient(315deg, transparent 45%, #ff9900ff 44%),linear-gradient(-315deg, var(--border-color) 87.5%, transparent 50%);
 	background-size: 100% 100%;	
 }
 
 .triangle-title-parent .triangle-title:nth-child(7) {
 	width: 101%;
-	background: linear-gradient(315deg, transparent 61%, #ed1941ff 61%),linear-gradient(-315deg, #8f8f8fbd 89%, transparent 50%);
+	background: linear-gradient(315deg, transparent 61%, #ed1941ff 61%),linear-gradient(-315deg, var(--border-color) 89%, transparent 50%);
 	background-size: 100% 100%;
 }
 
@@ -617,7 +626,7 @@ body {
 	border-color: var(--color--primary-50);
 	padding: 1.5rem;
 	height: unset;
-	/* background-image: linear-gradient(89deg,#0c9fa6,var(--color--primary-50)); */
+	/* background-image: linear-gradient(89deg,var(--main-text-color),var(--color--primary-50)); */
 }
 
 #block-olivero-content .form-submit:hover {
@@ -636,7 +645,7 @@ body {
 }
 
 #block-olivero-content a:hover {
-	color: #0c9fa6;
+	color: var(--main-text-color);
 }
 
 
@@ -661,7 +670,7 @@ body {
 .path-user .user-account-links ul li {
 	list-style-type: none;
 	text-align: center;
-	box-shadow: 0.1rem 0.1rem 0.5rem #8a8a8a;
+	box-shadow: 0.1rem 0.1rem 0.5rem var(--box-shadow-color);
 	padding: 1.31rem;
 	font-size: 1.1rem;
 	width: 20.5rem;
@@ -676,7 +685,7 @@ body {
 
 .path-user .user-account-links ul li a {
 	text-decoration: unset;
-	color: #fff;
+	color: var(--white-color);
 }
 
 .path-user .user-account-links ul li a:hover {
@@ -691,12 +700,12 @@ body {
 .select-results-form select {
 	text-align: center;
 	border-radius: unset;
-	box-shadow: 0.1rem 0.1rem 0.5rem #8a8a8a;
+	box-shadow: 0.1rem 0.1rem 0.5rem var(--box-shadow-color);
 	height: 4.5rem;
 	font-size: 1.1rem;
 	cursor: pointer;
-	background-color: #0c9fa6;
-	color: #fff;
+	background-color: var(--main-text-color);
+	color: var(--white-color);
 }
 
 .select-results-form select:hover {
@@ -713,7 +722,7 @@ body {
 .hourglass-explained-parent .hourglass-title {
 	display: grid;
 	grid-template-columns: 8rem auto;
-	border-bottom: 0.7rem solid #fff;
+	border-bottom: 0.7rem solid var(--white-color);
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
 }
@@ -742,12 +751,12 @@ body {
 	position: absolute;
 	margin-top: 0.87rem;
 	margin-left: 7.6rem;
-	border: 0.2rem solid #fff;
+	border: 0.2rem solid var(--white-color);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	z-index: 2;
-	font-family: Poppins, sans-serif;
+	font-family: var(--poppins);
 }
 
 .hourglass-explained-parent .right-text .inline-values-explained {
@@ -768,7 +777,7 @@ body {
 }
 
 .hourglass-explained-parent p {
-	font-family: Poppins, sans-serif;
+	font-family: var(--poppins);
 }
 
 .hourglass-title p, .hourglass-title p:first-child{
@@ -806,15 +815,15 @@ body {
 }
 
 .hourglass-explained-parent .hourglass-title:nth-child(1) {
-	background: linear-gradient(239deg,transparent 71%,#674ea7ff 64%),linear-gradient(-239deg,#8f8f8fbd 74.5%,#c9daf8ff 50%);
+	background: linear-gradient(239deg,transparent 71%,#674ea7ff 64%),linear-gradient(-239deg,var(--border-color) 74.5%,#c9daf8ff 50%);
 }
 
 .hourglass-explained-parent .hourglass-title:nth-child(2) {
-	background: linear-gradient(239deg,transparent 62%,#1155ccff 44%),linear-gradient(-239deg,#8f8f8fbd 65.5%,#c9daf8ff 50%);
+	background: linear-gradient(239deg,transparent 62%,#1155ccff 44%),linear-gradient(-239deg,var(--border-color) 65.5%,#c9daf8ff 50%);
 }
 
 .hourglass-explained-parent .hourglass-title:nth-child(3) {
-	background: linear-gradient(239deg,transparent 53%,#6fa8dcff 34%),linear-gradient(-239deg,#8f8f8fbd 56.5%,#c9daf8ff 50%);
+	background: linear-gradient(239deg,transparent 53%,#6fa8dcff 34%),linear-gradient(-239deg,var(--border-color) 56.5%,#c9daf8ff 50%);
 }
 
 .hourglass-explained-parent .hourglass-title:nth-child(4) {
@@ -828,20 +837,20 @@ body {
 	margin-left: 3.34rem;
 	width: 6rem;
 	height: 6rem;
-	border: 0.7rem solid #fff;
+	border: 0.7rem solid var(--white-color);
 	border-radius: 50%;
 }
 
 .hourglass-explained-parent .hourglass-title:nth-child(5) {
-	background: linear-gradient(302deg,transparent 53%,#f1c232ff 34%),linear-gradient(-302deg,#8f8f8fbd 56.5%,#e7caac 51%);
+	background: linear-gradient(302deg,transparent 53%,#f1c232ff 34%),linear-gradient(-302deg,var(--border-color) 56.5%,#e7caac 51%);
 }
 
 .hourglass-explained-parent .hourglass-title:nth-child(6) {
-	background: linear-gradient(302deg,transparent 62%,#ff9900ff 44%),linear-gradient(-302deg,#8f8f8fbd 65.5%,#e7caac 50%);
+	background: linear-gradient(302deg,transparent 62%,#ff9900ff 44%),linear-gradient(-302deg,var(--border-color) 65.5%,#e7caac 50%);
 }
 
 .hourglass-explained-parent .hourglass-title:nth-child(7) {
-	background: linear-gradient(302deg,transparent 71%,#ed1941ff 61%),linear-gradient(-302deg,#8f8f8fbd 75%,#e7caac 50%);
+	background: linear-gradient(302deg,transparent 71%,#ed1941ff 61%),linear-gradient(-302deg,var(--border-color) 75%,#e7caac 50%);
 }
 
 .page-node-type-hourglass .grid-full {
@@ -881,7 +890,7 @@ body {
 .page-node-type-hourglass .explain-screen-3 p,
 .page-node-type-hourglass .explain-screen-4 p,
 .page-node-type-hourglass .explain-screen-5 p {
-	font-family: Poppins, sans-serif;
+	font-family: var(--poppins);
 	line-height: 1.9rem;
 }
 
@@ -962,7 +971,7 @@ body {
 }
 
 .path-result .explanation-result a:hover {
-	color: #0c9fa6;
+	color: var(--main-text-color);
 }
 
 /* Change language */
@@ -989,12 +998,12 @@ body:not(.is-always-mobile-nav) .primary-nav__menu-item .primary-nav__menu--leve
 }
 
 .primary-nav__menu--level-2 .text-lang {
-	color: #000;
+	color: var(--dark-color);
 	font-size: 1rem;
 }
 
 .lang-parent .text-lang:hover {
-  color: #0c9fa6;
+  color: var(--main-text-color);
 }
 
 body:not(.is-always-mobile-nav) .primary-nav__menu-item .primary-nav__menu-🥕 {
@@ -1010,7 +1019,7 @@ body:not(.is-always-mobile-nav) .primary-nav__menu-item .primary-nav__menu--leve
 }
 
 #block-olivero-main-menu .primary-nav__menu--level-2 .title {
-	color: #000;
+	color: var(--dark-color);
 	display: block;
 	font-weight: 600;
 	font-size: 1.5rem;
@@ -1018,7 +1027,7 @@ body:not(.is-always-mobile-nav) .primary-nav__menu-item .primary-nav__menu--leve
 
 /* Initial Menu */
 .site-header__inner__container {
-	background-image: linear-gradient(89deg, #0c9fa6, var(--color--primary-50));
+	background-image: linear-gradient(89deg, var(--main-text-color), var(--color--primary-50));
 }
 
 .site-header__inner__container .header-nav, .site-header__inner__container #block-olivero-site-branding {
@@ -1027,23 +1036,23 @@ body:not(.is-always-mobile-nav) .primary-nav__menu-item .primary-nav__menu--leve
 
 .primary-nav__menu--level-1 .primary-nav__menu-item .primary-nav__button-toggle .icon--menu-toggle {
 	background: transparent;
-	color: #fff;
+	color: var(--white-color);
 }
 
 .primary-nav__menu-item--level-1 .primary-nav__menu-link--nolink:hover {
-	color: #0c9fa6;
+	color: var(--main-text-color);
 }
 
 #header .site-header__initial, #header .site-header__initial .sticky-header-toggle {
-	background: #0c9fa6;
+	background: var(--main-text-color);
 }
 
 .primary-nav__menu-item--level-1 .primary-nav__menu-link--nolink, .secondary-nav__menu--level-1 a {
-	color: #fff;
+	color: var(--white-color);
 }
 
 .secondary-nav__menu--level-1 a:hover {
-	color: #0c9fa6;
+	color: var(--main-text-color);
 }
 
 #page-wrapper .container {
@@ -1083,7 +1092,7 @@ body {
 }
 
 :has(.user-login-form) body {
-	background: #fff !important;
+	background: var(--white-color) !important;
 }
 
 :has(.user-login-form) #header {
@@ -1098,7 +1107,7 @@ body {
   content: "CVA";
 	font-size: 1.5rem;
 	font-weight: 600;
-	font-family: Poppins, sans-serif;
+	font-family: var(--poppins);
 	color: #101828;
 }
 
@@ -1209,7 +1218,7 @@ body {
 
 .footer-copyright p {
 	margin: unset;
-	font-family: Poppins, sans-serif;
+	font-family: var(--poppins);
 	font-size: 0.8rem;
 }
 
@@ -1235,7 +1244,7 @@ body:not(.is-always-mobile-nav) .page-wrapper .site-footer {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: #000;
+	background-color: var(--dark-color);
 }
 
 .social-youtube:hover,
@@ -1264,7 +1273,7 @@ body:not(.is-always-mobile-nav) .page-wrapper .site-footer {
 }
 
 .breadcrumb__list .breadcrumb__link:hover {
-	color: #0c9fa6;
+	color: var(--main-text-color);
 	text-decoration: unset;
 }
 
@@ -1281,7 +1290,7 @@ body:not(.path-user) #block-useraccountblock {
 
 /* Explanation screen */
 .explanation-content {
-	box-shadow: 0.1rem 0.1rem 0.5rem #8a8a8a;
+	box-shadow: 0.1rem 0.1rem 0.5rem var(--box-shadow-color);
 	padding: 0.2rem 1.2rem;
 }
 

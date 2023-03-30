@@ -104,8 +104,9 @@ class SelectResultsForm extends FormBase {
     }
 
     $redirect_to_new_test = '<a href="/">';
-    if ($this->currentLanguage() == 'pt-br') {
-      $redirect_to_new_test = '<a href="/pt-br/">';
+    $current_language = $this->currentLanguage();
+    if ($current_language != 'en') {
+      $redirect_to_new_test = '<a href="/' . $current_language . '/">';
     }
 
     // Link to homepage through the my account page.
